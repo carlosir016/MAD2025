@@ -21,8 +21,10 @@ import androidx.core.view.WindowInsetsCompat
 class ThirdActivity : AppCompatActivity(), LocationListener{
     private lateinit var locationManager: LocationManager
     private val locationPermissionCode = 2
+    private var lastLocation : Location? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("THIRD", "Welcome to the third activity")
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if(ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)!=
@@ -40,28 +42,34 @@ class ThirdActivity : AppCompatActivity(), LocationListener{
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_third)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        Log.d("THIRD", "Welcome to the third activity")
 
-        val thirdActivityButton: Button = findViewById(R.id.secondButton)
-        thirdActivityButton.setOnClickListener {
+        val secondActivityButton: Button = findViewById(R.id.secondButton)
+        secondActivityButton.setOnClickListener {
             val intent = Intent(this, SecondActivity::class.java)
             startActivity(intent)
         }
 
         val mapButtonActivity: Button = findViewById(R.id.map)
         mapButtonActivity.setOnClickListener {
-            val intent = Intent(this, OpenStreetMapsActivity::class.java)
-
-            startActivity(intent)
+            if(lastLocation != null) {
+                val intent = Intent(this, OpenStreetMapsActivity::class.java)
+                val bundle = Bundle()
+                bundle.putParcelable("location",null)
+                intent.putExtra("locationBundle",bundle)
+                startActivity(intent)
+            } else
+                Log.e("THIRD","Waiting...")
         }
     }
 
     override fun onLocationChanged(location: Location) {
+        lastLocation = location
         val textView: TextView = findViewById(R.id.mainTextView)
         textView.text = "Latitude: ${location.latitude}\n Longitude: ${location.longitude}"
     }
