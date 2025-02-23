@@ -15,6 +15,8 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Polyline
+
 
 @Suppress("DEPRECATION")
 class OpenStreetMapsActivity : AppCompatActivity() {
@@ -83,6 +85,9 @@ class OpenStreetMapsActivity : AppCompatActivity() {
     }
 
     fun addMarkers(map:MapView, coordinates:List<GeoPoint>, placesNames:List<String>, context:Context) {
+        val polyline = Polyline()
+        polyline.setPoints(coordinates)
+
         for(i in coordinates.indices) {
             val marker = Marker(map)
             marker.position = coordinates[i]
@@ -91,5 +96,8 @@ class OpenStreetMapsActivity : AppCompatActivity() {
             marker.title =placesNames[i]
             map.overlays.add(marker)
         }
+        map.overlays.add(polyline)
     }
+
+
 }
