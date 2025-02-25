@@ -16,6 +16,10 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
+import android.widget.Toast
+import android.app.AlertDialog
+import android.widget.Button
+import android.widget.EditText
 
 
 @Suppress("DEPRECATION")
@@ -40,6 +44,9 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         "Mercadona",
         "ETSISI"
     )
+
+
+
 
     private lateinit var map : MapView
 
@@ -81,7 +88,11 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         marker.title = "initial point"
         map.overlays.add(marker)
 
+
+
+
         addMarkers(map, coordinatesMarks, coordinatesNames, this)
+        onLocationChanged()
     }
 
     fun addMarkers(map:MapView, coordinates:List<GeoPoint>, placesNames:List<String>, context:Context) {
@@ -97,6 +108,11 @@ class OpenStreetMapsActivity : AppCompatActivity() {
             map.overlays.add(marker)
         }
         map.overlays.add(polyline)
+    }
+
+    fun onLocationChanged() {
+        val toastText = "MENSAJE DE BIENVENIDA"
+        Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show()
     }
 
 
