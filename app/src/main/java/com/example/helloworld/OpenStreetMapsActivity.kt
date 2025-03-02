@@ -1,5 +1,6 @@
 package com.example.helloworld
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
 import android.location.Location
@@ -20,6 +21,9 @@ import android.widget.Toast
 import android.app.AlertDialog
 import android.widget.Button
 import android.widget.EditText
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 
 
 @Suppress("DEPRECATION")
@@ -45,8 +49,7 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         "ETSISI"
     )
 
-
-
+    private val fileName = "coordinates.csv"
 
     private lateinit var map : MapView
 
@@ -62,6 +65,8 @@ class OpenStreetMapsActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        saveCoordinates()
 
         Configuration.getInstance().userAgentValue = "helloWorld"
         Configuration.getInstance().load(applicationContext, getSharedPreferences("osm", MODE_PRIVATE))
@@ -82,32 +87,68 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         map.controller.setZoom(17.0)
         map.controller.setCenter(startPoint)
 
-        val marker = Marker(map)
-        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        marker.icon = ContextCompat.getDrawable(this, android.R.drawable.ic_delete) as BitmapDrawable
-        marker.title = "initial point"
-        map.overlays.add(marker)
-
-
-
-
-        addMarkers(map, coordinatesMarks, coordinatesNames, this)
+        readFile()
         onLocationChanged()
     }
 
-    fun addMarkers(map:MapView, coordinates:List<GeoPoint>, placesNames:List<String>, context:Context) {
-        val polyline = Polyline()
-        polyline.setPoints(coordinates)
+    fun addMarkers(map:MapView, coordinate:GeoPoint, placeName:String, context:Context) {
+        val marker = Marker(map)
+        marker.position = coordinate
+        marker.setAnchor(Marker.ANCHOR_CENTER,Marker.ANCHOR_BOTTOM)
+        marker.icon = ContextCompat.getDrawable(context,android.R.drawable.ic_menu_compass) as BitmapDrawable
+        marker.title = placeName
+        map.overlays.add(marker)
 
-        for(i in coordinates.indices) {
-            val marker = Marker(map)
-            marker.position = coordinates[i]
-            marker.setAnchor(Marker.ANCHOR_CENTER,Marker.ANCHOR_BOTTOM)
-            marker.icon = ContextCompat.getDrawable(context, android.R.drawable.ic_menu_compass) as BitmapDrawable
-            marker.title =placesNames[i]
-            map.overlays.add(marker)
-        }
+    }
+
+    fun trackRute(){
+        val polyline = Polyline()
+        polyline.setPoints(coordinatesMarks)
         map.overlays.add(polyline)
+
+    }
+
+    private fun findFile():Boolean{
+        val fileList = fileList()
+        var exists = false
+        fileList.forEach {
+            if(fileName == it)
+                exists = true
+        }
+        return exists
+    }
+
+    fun saveCoordinates (){
+        var content = ""
+        for ((coordNames,coordinates) in coordinatesNames.zip(coordinatesMarks))
+            content += "${coordNames},${coordinates.latitude},${coordinates.longitude}\n"
+        Log.d("FILE",content)
+        writeFile(content)
+    }
+
+    fun writeFile(content: String) {
+        val file = OutputStreamWriter(openFileOutput(fileName, Activity.MODE_PRIVATE))
+        file.write(content)
+        file.flush()
+        file.close()
+    }
+
+     fun readFile(){
+        if(!findFile()) {
+            Log.d("FILE","file do not exists")
+            return
+        }
+        val file = InputStreamReader(openFileInput(fileName))
+        val br = BufferedReader(file)
+        var line = br.readLine()
+        Log.d("FILE","file opened")
+        while(line != null){
+            Log.d("FILE",line)
+            val (name,latitude,longitude) = line.split(",").map{it.trim()}
+            addMarkers(map,GeoPoint(latitude.toDouble(),longitude.toDouble()),name,this)
+            line = br.readLine()
+        }
+         trackRute()
     }
 
     fun onLocationChanged() {

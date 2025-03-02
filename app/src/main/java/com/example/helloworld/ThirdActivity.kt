@@ -17,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 class ThirdActivity : AppCompatActivity(), LocationListener{
     private lateinit var locationManager: LocationManager
@@ -67,6 +69,8 @@ class ThirdActivity : AppCompatActivity(), LocationListener{
                 Log.e("THIRD","Waiting...")
         }
     }
+
+
 
     override fun onLocationChanged(location: Location) {
         lastLocation = location
