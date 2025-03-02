@@ -67,7 +67,6 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         }
 
         saveCoordinates()
-        readFile()
 
         Configuration.getInstance().userAgentValue = "helloWorld"
         Configuration.getInstance().load(applicationContext, getSharedPreferences("osm", MODE_PRIVATE))
@@ -88,32 +87,25 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         map.controller.setZoom(17.0)
         map.controller.setCenter(startPoint)
 
-        val marker = Marker(map)
-        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        marker.icon = ContextCompat.getDrawable(this, android.R.drawable.ic_delete) as BitmapDrawable
-        marker.title = "initial point"
-        map.overlays.add(marker)
-
-
-
-
-        addMarkers(map, coordinatesMarks, coordinatesNames, this)
+        readFile()
         onLocationChanged()
     }
 
-    fun addMarkers(map:MapView, coordinates:List<GeoPoint>, placesNames:List<String>, context:Context) {
-        val polyline = Polyline()
-        polyline.setPoints(coordinates)
+    fun addMarkers(map:MapView, coordinate:GeoPoint, placeName:String, context:Context) {
+        val marker = Marker(map)
+        marker.position = coordinate
+        marker.setAnchor(Marker.ANCHOR_CENTER,Marker.ANCHOR_BOTTOM)
+        marker.icon = ContextCompat.getDrawable(context,android.R.drawable.ic_menu_compass) as BitmapDrawable
+        marker.title = placeName
+        map.overlays.add(marker)
 
-        for(i in coordinates.indices) {
-            val marker = Marker(map)
-            marker.position = coordinates[i]
-            marker.setAnchor(Marker.ANCHOR_CENTER,Marker.ANCHOR_BOTTOM)
-            marker.icon = ContextCompat.getDrawable(context, android.R.drawable.ic_menu_compass) as BitmapDrawable
-            marker.title =placesNames[i]
-            map.overlays.add(marker)
-        }
+    }
+
+    fun trackRute(){
+        val polyline = Polyline()
+        polyline.setPoints(coordinatesMarks)
         map.overlays.add(polyline)
+
     }
 
     private fun findFile():Boolean{
@@ -130,8 +122,8 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         var content = ""
         for ((coordNames,coordinates) in coordinatesNames.zip(coordinatesMarks))
             content += "${coordNames},${coordinates.latitude},${coordinates.longitude}\n"
-    Log.d("FILE",content)
-    writeFile(content)
+        Log.d("FILE",content)
+        writeFile(content)
     }
 
     fun writeFile(content: String) {
@@ -152,8 +144,11 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         Log.d("FILE","file opened")
         while(line != null){
             Log.d("FILE",line)
+            val (name,latitude,longitude) = line.split(",").map{it.trim()}
+            addMarkers(map,GeoPoint(latitude.toDouble(),longitude.toDouble()),name,this)
             line = br.readLine()
         }
+         trackRute()
     }
 
     fun onLocationChanged() {

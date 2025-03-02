@@ -1,5 +1,6 @@
 package com.example.helloworld
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -11,8 +12,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import java.io.OutputStreamWriter
 
 class SecondActivity : AppCompatActivity() {
+
+    val loginFile = "login.txt"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -52,6 +57,7 @@ class SecondActivity : AppCompatActivity() {
             val userInput = input.text.toString()
             if (userInput.isNotBlank()) {
                 Toast.makeText(this, "User ID saved: $userInput", Toast.LENGTH_LONG).show()
+                saveUser(userInput)
             } else {
                 Toast.makeText(this, "User ID cannot be blank", Toast.LENGTH_LONG).show()
             }
@@ -61,6 +67,13 @@ class SecondActivity : AppCompatActivity() {
             dialog.cancel()
         }
         builder.show()
+    }
+
+    fun saveUser(content:String){
+        val file = OutputStreamWriter(openFileOutput(loginFile, Activity.MODE_PRIVATE))
+        file.write(content)
+        file.flush()
+        file.close()
     }
 
 }
