@@ -52,7 +52,7 @@ class SecondActivity : AppCompatActivity() {
             val userInput = input.text.toString()
             if (userInput.isNotBlank()) {
                 Toast.makeText(this, "User ID saved: $userInput", Toast.LENGTH_LONG).show()
-                saveUser(userInput)
+                saveUser(userInput,"1234")
 
                 startActivity(Intent(this, ThirdActivity::class.java))
             } else {
@@ -66,9 +66,9 @@ class SecondActivity : AppCompatActivity() {
         builder.show()
     }
 
-    fun saveUser(content:String){
+    fun saveUser(user:String,password:String){
         val file = OutputStreamWriter(openFileOutput(loginFile, Activity.MODE_PRIVATE))
-        file.write(content)
+        file.write("${user},${password}\n")
         file.flush()
         file.close()
     }

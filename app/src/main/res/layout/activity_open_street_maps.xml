@@ -8,6 +8,11 @@
     android:layout_height="match_parent"
     tools:context=".OpenStreetMapsActivity">
 
+    <org.osmdroid.views.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <Button
         android:id="@+id/addMarkerButton"
         android:layout_width="wrap_content"
@@ -16,14 +21,6 @@
         android:layout_marginLeft="120dp"
         android:layout_marginTop="336dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
-
-
-    <org.osmdroid.views.MapView
-        android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
