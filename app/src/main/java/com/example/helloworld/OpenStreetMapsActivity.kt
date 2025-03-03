@@ -89,6 +89,48 @@ class OpenStreetMapsActivity : AppCompatActivity() {
 
         readFile()
         onLocationChanged()
+
+        val addMarkerButton: Button = findViewById(R.id.addMarkerButton)
+        addMarkerButton.setOnClickListener {
+            showAddMarkerDialog()
+        }
+    }
+
+    private fun showAddMarkerDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Añadir nuevo marcador")
+
+        val layout = layoutInflater.inflate(R.layout.dialog_add_marker, null)
+        val nameInput = layout.findViewById<EditText>(R.id.markerNameInput)
+        val latInput = layout.findViewById<EditText>(R.id.markerLatInput)
+        val lonInput = layout.findViewById<EditText>(R.id.markerLonInput)
+
+        builder.setView(layout)
+        builder.setPositiveButton("Añadir") { _, _ ->
+            val name = nameInput.text.toString()
+            val lat = latInput.text.toString().toDoubleOrNull()
+            val lon = lonInput.text.toString().toDoubleOrNull()
+
+            if (name.isNotBlank() && lat != null && lon != null) {
+                val newPoint = GeoPoint(lat, lon)
+                addMarkers(map, newPoint, name, this)
+                saveNewCoordinate(name, lat, lon)
+            } else {
+                Toast.makeText(this, "Datos inválidos", Toast.LENGTH_LONG).show()
+            }
+        }
+        builder.setNegativeButton("Cancelar") { dialog, _ ->
+            dialog.cancel()
+        }
+        builder.show()
+    }
+
+    private fun saveNewCoordinate(name: String, lat: Double, lon: Double) {
+        val content = "$name,$lat,$lon\n"
+        val file = OutputStreamWriter(openFileOutput(fileName, Activity.MODE_APPEND))
+        file.write(content)
+        file.flush()
+        file.close()
     }
 
     fun addMarkers(map:MapView, coordinate:GeoPoint, placeName:String, context:Context) {
@@ -98,7 +140,6 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         marker.icon = ContextCompat.getDrawable(context,android.R.drawable.ic_menu_compass) as BitmapDrawable
         marker.title = placeName
         map.overlays.add(marker)
-
     }
 
     fun trackRute(){

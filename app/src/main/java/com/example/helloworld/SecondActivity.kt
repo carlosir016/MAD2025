@@ -31,14 +31,9 @@ class SecondActivity : AppCompatActivity() {
         Log.d("SECOND", "Welcome to the second Activity")
 
         val mainActivityButton: Button = findViewById(R.id.mainButton)
-        val thirdActivityButton: Button = findViewById(R.id.ThirdButton)
         mainActivityButton.setOnClickListener {
             val main = Intent(this, MainActivity::class.java)
             startActivity(main)
-        }
-        thirdActivityButton.setOnClickListener {
-            val third = Intent(this, ThirdActivity::class.java)
-            startActivity(third)
         }
 
         val userIdentifierButton: Button = findViewById(R.id.userIdentifierButton)
@@ -58,6 +53,8 @@ class SecondActivity : AppCompatActivity() {
             if (userInput.isNotBlank()) {
                 Toast.makeText(this, "User ID saved: $userInput", Toast.LENGTH_LONG).show()
                 saveUser(userInput)
+
+                startActivity(Intent(this, ThirdActivity::class.java))
             } else {
                 Toast.makeText(this, "User ID cannot be blank", Toast.LENGTH_LONG).show()
             }
