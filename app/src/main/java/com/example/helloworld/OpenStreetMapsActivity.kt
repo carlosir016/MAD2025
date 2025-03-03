@@ -91,7 +91,11 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         onLocationChanged()
     }
 
-    fun addMarkers(map:MapView, coordinate:GeoPoint, placeName:String, context:Context) {
+    private fun getCoordinateName() : String{
+        return ""
+    }
+
+    fun addMarker(map:MapView, coordinate:GeoPoint, placeName:String, context:Context) {
         val marker = Marker(map)
         marker.position = coordinate
         marker.setAnchor(Marker.ANCHOR_CENTER,Marker.ANCHOR_BOTTOM)
@@ -145,7 +149,7 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         while(line != null){
             Log.d("FILE",line)
             val (name,latitude,longitude) = line.split(",").map{it.trim()}
-            addMarkers(map,GeoPoint(latitude.toDouble(),longitude.toDouble()),name,this)
+            addMarker(map,GeoPoint(latitude.toDouble(),longitude.toDouble()),name,this)
             line = br.readLine()
         }
          trackRute()
