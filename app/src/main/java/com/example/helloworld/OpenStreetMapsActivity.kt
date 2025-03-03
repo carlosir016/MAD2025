@@ -71,21 +71,10 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         Configuration.getInstance().userAgentValue = "helloWorld"
         Configuration.getInstance().load(applicationContext, getSharedPreferences("osm", MODE_PRIVATE))
 
-        val bundle = intent.getBundleExtra("locationBundle")
-        val location: Location? = bundle?.getParcelable("location")
-
-        val startPoint = if(location != null) {
-            Log.d("MAP","Location:[${location.altitude}][${location.latitude},${location.longitude}]")
-            GeoPoint(location.latitude,location.longitude)
-        } else {
-            Log.d("MAP","Location is null")
-            GeoPoint(40.39593229478562, -3.66441886496911)
-        }
-
         map = findViewById(R.id.map)
         map.setTileSource(TileSourceFactory.MAPNIK)
         map.controller.setZoom(17.0)
-        map.controller.setCenter(startPoint)
+        map.controller.setCenter(GeoPoint(40.39593229478562, -3.66441886496911))
 
         readFile()
         onLocationChanged()
@@ -113,7 +102,7 @@ class OpenStreetMapsActivity : AppCompatActivity() {
 
             if (name.isNotBlank() && lat != null && lon != null) {
                 val newPoint = GeoPoint(lat, lon)
-                addMarkers(map, newPoint, name, this)
+                addMarker(map, newPoint, name, this)
                 saveNewCoordinate(name, lat, lon)
             } else {
                 Toast.makeText(this, "Datos inválidos", Toast.LENGTH_LONG).show()
@@ -131,10 +120,6 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         file.write(content)
         file.flush()
         file.close()
-    }
-
-    private fun getCoordinateName() : String{
-        return ""
     }
 
     fun addMarker(map:MapView, coordinate:GeoPoint, placeName:String, context:Context) {
