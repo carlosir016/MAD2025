@@ -19,6 +19,7 @@ import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 import android.widget.Toast
 import android.app.AlertDialog
+import android.text.InputType
 import android.widget.Button
 import android.widget.EditText
 import java.io.BufferedReader
@@ -29,25 +30,7 @@ import java.io.OutputStreamWriter
 @Suppress("DEPRECATION")
 class OpenStreetMapsActivity : AppCompatActivity() {
 
-    val coordinatesMarks = listOf(
-        GeoPoint(40.39496359772603, -3.663151487104123), // IES Vallecas I
-        GeoPoint(40.39258752846945, -3.6589599484801845), // Rayo's Boxing Gym
-        GeoPoint(40.39047239582602, -3.6549692838344363), // Azorin Park
-        GeoPoint(40.38975267467859, -3.6456830179722557), // Gala's Drive School
-        GeoPoint(40.38777426507525, -3.6397332185383453), // Primary Attention Federica Montseny
-        GeoPoint(40.38292912121118, -3.625833448588706), // Mercadona
-        GeoPoint(40.390103594659664, -3.6278874301310378) // ETSISI
-    )
-
-    val coordinatesNames = listOf(
-        "IES Vallecas I",
-        "Rayo's Boxing Gym",
-        "Azorin Park",
-        "Gala Drive School",
-        "Primary Attention Federica Montseny",
-        "Mercadona",
-        "ETSISI"
-    )
+    val coordinatesMarks = mutableListOf<GeoPoint>()
 
     private val fileName = "coordinates.csv"
 
@@ -66,8 +49,6 @@ class OpenStreetMapsActivity : AppCompatActivity() {
             insets
         }
 
-        saveCoordinates()
-
         Configuration.getInstance().userAgentValue = "helloWorld"
         Configuration.getInstance().load(applicationContext, getSharedPreferences("osm", MODE_PRIVATE))
 
@@ -77,6 +58,7 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         map.controller.setCenter(GeoPoint(40.39593229478562, -3.66441886496911))
 
         readFile()
+
         onLocationChanged()
 
         val addMarkerButton: Button = findViewById(R.id.addMarkerButton)
@@ -93,7 +75,10 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         val nameInput = layout.findViewById<EditText>(R.id.markerNameInput)
         val latInput = layout.findViewById<EditText>(R.id.markerLatInput)
         val lonInput = layout.findViewById<EditText>(R.id.markerLonInput)
-
+        latInput.inputType =InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or
+                InputType.TYPE_NUMBER_FLAG_SIGNED
+        lonInput.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or
+                InputType.TYPE_NUMBER_FLAG_SIGNED
         builder.setView(layout)
         builder.setPositiveButton("Añadir") { _, _ ->
             val name = nameInput.text.toString()
@@ -103,6 +88,7 @@ class OpenStreetMapsActivity : AppCompatActivity() {
             if (name.isNotBlank() && lat != null && lon != null) {
                 val newPoint = GeoPoint(lat, lon)
                 addMarker(map, newPoint, name, this)
+                coordinatesMarks.add(newPoint)
                 saveNewCoordinate(name, lat, lon)
             } else {
                 Toast.makeText(this, "Datos inválidos", Toast.LENGTH_LONG).show()
@@ -129,6 +115,7 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         marker.icon = ContextCompat.getDrawable(context,android.R.drawable.ic_menu_compass) as BitmapDrawable
         marker.title = placeName
         map.overlays.add(marker)
+        trackRute()
     }
 
     fun trackRute(){
@@ -148,21 +135,6 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         return exists
     }
 
-    fun saveCoordinates (){
-        var content = ""
-        for ((coordNames,coordinates) in coordinatesNames.zip(coordinatesMarks))
-            content += "${coordNames},${coordinates.latitude},${coordinates.longitude}\n"
-        Log.d("FILE",content)
-        writeFile(content)
-    }
-
-    fun writeFile(content: String) {
-        val file = OutputStreamWriter(openFileOutput(fileName, Activity.MODE_PRIVATE))
-        file.write(content)
-        file.flush()
-        file.close()
-    }
-
      fun readFile(){
         if(!findFile()) {
             Log.d("FILE","file do not exists")
@@ -175,7 +147,9 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         while(line != null){
             Log.d("FILE",line)
             val (name,latitude,longitude) = line.split(",").map{it.trim()}
-            addMarker(map,GeoPoint(latitude.toDouble(),longitude.toDouble()),name,this)
+            val newPoint = GeoPoint(latitude.toDouble(),longitude.toDouble())
+            addMarker(map,newPoint,name,this)
+            coordinatesMarks.add(newPoint)
             line = br.readLine()
         }
          trackRute()
