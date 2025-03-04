@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Latitud"
-            android:inputType="numberDecimal"
+            android:inputType="numberDecimal|numberSigned"
             app:layout_constraintTop_toBottomOf="@id/markerNameInput"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
