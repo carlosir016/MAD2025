@@ -75,10 +75,12 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         val nameInput = layout.findViewById<EditText>(R.id.markerNameInput)
         val latInput = layout.findViewById<EditText>(R.id.markerLatInput)
         val lonInput = layout.findViewById<EditText>(R.id.markerLonInput)
+
         latInput.inputType =InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or
                 InputType.TYPE_NUMBER_FLAG_SIGNED
         lonInput.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or
                 InputType.TYPE_NUMBER_FLAG_SIGNED
+
         builder.setView(layout)
         builder.setPositiveButton("Añadir") { _, _ ->
             val name = nameInput.text.toString()
