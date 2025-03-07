@@ -1,5 +1,6 @@
 package com.example.helloworld
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -13,13 +14,16 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import org.osmdroid.util.GeoPoint
+import java.io.BufferedReader
 import java.io.IOException
+import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 
 class MainActivity : AppCompatActivity() {
 
     val loginFile = "login.txt"
-
+    var users : MutableList<String> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -30,41 +34,132 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         Log.d("MAIN","Welcome to the first Activity")
-        val logIn : Button = findViewById(R.id.LogIn)
-        logIn.setOnClickListener{
-            val intent = Intent(this, SecondActivity::class.java)
-            startActivity(intent)
+
+        readFile()
+
+        val signInButton : Button = findViewById(R.id.SignIn)
+        signInButton.setOnClickListener{
+            signIn()
+        }
+
+        val logInButton : Button = findViewById(R.id.LogIn)
+        logInButton.setOnClickListener {
+            logIn()
         }
     }
 
-    private fun showUserIdentifierDialog() {
+    fun signIn() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Introducir nombre de usuario")
-        val input = EditText(this)
-        builder.setView(input)
-        builder.setPositiveButton("OK") { dialog, which ->
-            val userInput = input.text.toString()
-            if (userInput.isNotBlank()) {
-                Toast.makeText(this, "User ID saved: $userInput", Toast.LENGTH_LONG).show()
-                saveUser(userInput,"1234")
+        builder.setTitle("Register")
 
-                startActivity(Intent(this, ThirdActivity::class.java))
-            } else {
-                Toast.makeText(this, "User ID cannot be blank", Toast.LENGTH_LONG).show()
-            }
+        val registerLayout = layoutInflater.inflate(R.layout.dialog_register,null)
+
+        val userName = registerLayout.findViewById<EditText>(R.id.userName).text
+        val password = registerLayout.findViewById<EditText>(R.id.password).text
+
+        builder.setView(registerLayout)
+        builder.setPositiveButton("SignIn"){ _ , _ ->
+            if(userName.isNotBlank() && password.isNotBlank()) {
+                saveUser(userName.toString(),password.toString())
+                val intent = Intent(this,SecondActivity::class.java)
+                startActivity(intent)
+            } else
+                Toast.makeText(this, "Invalid data", Toast.LENGTH_LONG).show()
         }
-        builder.setNegativeButton("Cancel") { dialog, which ->
-            Toast.makeText(this, "Thanks and goodbye!", Toast.LENGTH_LONG).show()
+        builder.setNegativeButton("Cancel") { dialog , _ ->
             dialog.cancel()
         }
         builder.show()
     }
 
+    fun logIn() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Log-In")
+
+        val logInLayout = layoutInflater.inflate(R.layout.dialog_login,null)
+
+        val userName = logInLayout.findViewById<EditText>(R.id.userName).text
+        val userPassword = logInLayout.findViewById<EditText>(R.id.password).text
+
+        builder.setView(logInLayout)
+        builder.setPositiveButton("Log In"){ dialog , _ ->
+            if(users.size == 0)
+                Toast.makeText(this, "File do not exists", Toast.LENGTH_LONG).show()
+            else if(!findUser(users,userName.toString()))
+                Toast.makeText(this, "user do not exists", Toast.LENGTH_LONG).show()
+            else if(!findPassword(users,userPassword.toString(),userName.toString()))
+                Toast.makeText(this,"password dismatch",Toast.LENGTH_LONG).show()
+            else {
+                intent = Intent(this, SecondActivity::class.java)
+                startActivity(intent)
+            }
+
+        }
+        builder.setNeutralButton("Sign In"){ dialog , _ ->
+            dialog.cancel()
+            signIn()
+        }
+
+        builder.setNegativeButton("Cancel"){ dialog, _ ->
+            dialog.cancel()
+        }
+
+        builder.show()
+    }
+
+    private fun findPassword(users:List<String>,password: String, userName:String):Boolean{
+        var exists = false
+        users.forEach{
+            if(userName in it)
+                if(password == it.split(",")[1])
+                    exists = true
+        }
+        return exists
+    }
+
+    private fun findUser(users:List<String>, user:String): Boolean {
+        var exists = false
+        users.forEach {
+            if(user == it.split(",")[0])
+                exists = true
+        }
+        return exists
+    }
+
+    private fun findFile():Boolean{
+        val fileList = fileList()
+        var exists = false
+        fileList.forEach {
+            if(loginFile == it)
+                exists = true
+        }
+        return exists
+    }
+
+    fun readFile(){
+        if(!findFile()) {
+            return
+        }
+        val file = InputStreamReader(openFileInput(loginFile))
+        val br = BufferedReader(file)
+        var line = br.readLine()
+        while(line != null){
+            users.add(line)
+            line = br.readLine()
+        }
+    }
+
     fun saveUser(user:String,password:String){
+        users.add("${user},${password}")
+        saveFile()
+    }
+
+    fun saveFile(){
         val file = OutputStreamWriter(openFileOutput(loginFile, Activity.MODE_PRIVATE))
-        file.write("${user},${password}\n")
+        users.forEach{
+            file.write(it + "\n")
+        }
         file.flush()
         file.close()
     }
-
 }
