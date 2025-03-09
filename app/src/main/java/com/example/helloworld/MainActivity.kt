@@ -1,8 +1,10 @@
 package com.example.helloworld
 
+
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -12,11 +14,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.util.Log
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
-import org.osmdroid.util.GeoPoint
 import java.io.BufferedReader
-import java.io.IOException
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 
@@ -46,7 +45,29 @@ class MainActivity : AppCompatActivity() {
         logInButton.setOnClickListener {
             logIn()
         }
-    }
+
+        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        navView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.navigation_map -> {
+                    val intent = Intent(this, OpenStreetMapsActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.navigation_list -> {
+                    val intent = Intent(this, SecondActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
+        }
+        }
 
     fun signIn() {
         val builder = AlertDialog.Builder(this)
@@ -72,6 +93,7 @@ class MainActivity : AppCompatActivity() {
         builder.show()
     }
 
+    @SuppressLint("UnsafeIntentLaunch")
     fun logIn() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Log-In")
