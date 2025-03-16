@@ -1,9 +1,7 @@
 package com.example.helloworld
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
-import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
@@ -22,9 +20,10 @@ import android.app.AlertDialog
 import android.text.InputType
 import android.widget.Button
 import android.widget.EditText
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
+import androidx.lifecycle.lifecycleScope
+import com.example.helloworld.room.AppDatabase
+import com.example.helloworld.room.CoordinateEntity
+import kotlinx.coroutines.launch
 
 
 @Suppress("DEPRECATION")
@@ -32,7 +31,6 @@ class OpenStreetMapsActivity : AppCompatActivity() {
 
     val coordinatesMarks = mutableListOf<GeoPoint>()
 
-    private val fileName = "coordinates.csv"
 
     private lateinit var map : MapView
 
@@ -57,7 +55,7 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         map.controller.setZoom(17.0)
         map.controller.setCenter(GeoPoint(40.39593229478562, -3.66441886496911))
 
-        readFile()
+        readCoordinates()
 
         onLocationChanged()
 
@@ -103,11 +101,27 @@ class OpenStreetMapsActivity : AppCompatActivity() {
     }
 
     private fun saveNewCoordinate(name: String, lat: Double, lon: Double) {
-        val content = "$name,$lat,$lon\n"
-        val file = OutputStreamWriter(openFileOutput(fileName, Activity.MODE_APPEND))
-        file.write(content)
-        file.flush()
-        file.close()
+        val coord = CoordinateEntity(
+            name,
+            lat,
+            lon
+        )
+        val db = AppDatabase.getDatabase(this)
+        lifecycleScope.launch {
+            db.coordDao().insert(coord)
+        }
+    }
+
+    fun readCoordinates(){
+        val db = AppDatabase.getDatabase(this)
+        lifecycleScope.launch {
+            val coordinates = db.coordDao().getAll()
+            coordinates.forEach {
+                val coord =  GeoPoint(it.latitude.toDouble(),it.longitude.toDouble())
+                coordinatesMarks.add(coord)
+                addMarker(map,coord,it.name.toString(), this@OpenStreetMapsActivity)
+            }
+        }
     }
 
     fun addMarker(map:MapView, coordinate:GeoPoint, placeName:String, context:Context) {
@@ -125,36 +139,6 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         polyline.setPoints(coordinatesMarks)
         map.overlays.add(polyline)
 
-    }
-
-    private fun findFile():Boolean{
-        val fileList = fileList()
-        var exists = false
-        fileList.forEach {
-            if(fileName == it)
-                exists = true
-        }
-        return exists
-    }
-
-     fun readFile(){
-        if(!findFile()) {
-            Log.d("FILE","file do not exists")
-            return
-        }
-        val file = InputStreamReader(openFileInput(fileName))
-        val br = BufferedReader(file)
-        var line = br.readLine()
-        Log.d("FILE","file opened")
-        while(line != null){
-            Log.d("FILE",line)
-            val (name,latitude,longitude) = line.split(",").map{it.trim()}
-            val newPoint = GeoPoint(latitude.toDouble(),longitude.toDouble())
-            addMarker(map,newPoint,name,this)
-            coordinatesMarks.add(newPoint)
-            line = br.readLine()
-        }
-         trackRute()
     }
 
     fun onLocationChanged() {
