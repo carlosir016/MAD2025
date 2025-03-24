@@ -33,12 +33,13 @@
             app:layout_constraintTop_toBottomOf="@id/markerLatInput"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
-
-        <Button
-            android:id="@+id/addMarkerButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Add Marker"
+        
+        <Spinner
+            android:id="@+id/ground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="ground category"
+            android:inputType="numberDecimal|numberSigned"
             app:layout_constraintTop_toBottomOf="@id/markerLonInput"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
