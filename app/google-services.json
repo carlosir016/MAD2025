@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "357211379852",
+    "project_id": "renaturalizationtracker",
+    "storage_bucket": "renaturalizationtracker.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:357211379852:android:d9eaabfe9739e01b5043a9",
+        "android_client_info": {
+          "package_name": "com.example.helloworld"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5kS4F9GChNLgmzEo5__hVbRyt_rDg_vE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
