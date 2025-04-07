@@ -50,6 +50,7 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         "franco-arcillo-limoso",
         ""
     )
+
     data class TipoSuelo(val nombre: String, val cultivos: List<String>)
 
     val suelosCultivos = mapOf(
@@ -154,7 +155,8 @@ class OpenStreetMapsActivity : AppCompatActivity() {
 
             if (name.isNotBlank() && lat != null && lon != null) {
                 val newPoint = GeoPoint(lat, lon)
-                val cultivosSugeridos = suelosCultivos[ground]?.joinToString(", ") ?: "Sin sugerencias"
+                val cultivosSugeridos =
+                    suelosCultivos[ground]?.joinToString(", ") ?: "Sin sugerencias"
                 addMarker(map, newPoint, name, this)
                 coordinatesMarks.add(newPoint)
 
@@ -176,7 +178,6 @@ class OpenStreetMapsActivity : AppCompatActivity() {
     }
 
 
-
     private fun saveNewCoordinate(name: String, lat: Double, lon: Double, ground: String) {
         val coord = CoordinateEntity(
             name,
@@ -184,7 +185,7 @@ class OpenStreetMapsActivity : AppCompatActivity() {
             lon,
             ground,
 
-        )
+            )
         val db = AppDatabase.getDatabase(this)
         lifecycleScope.launch {
             db.coordDao().insert(coord)
@@ -227,7 +228,7 @@ class OpenStreetMapsActivity : AppCompatActivity() {
     }
 
 
-    fun createNav(){
+    fun createNav() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -249,10 +250,9 @@ class OpenStreetMapsActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+
     }
-
-
 }
-
 
 
