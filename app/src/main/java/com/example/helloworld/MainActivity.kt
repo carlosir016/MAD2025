@@ -19,19 +19,28 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var imagen: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+        imagen = findViewById(R.id.Imagen)
+        val mainLayout = findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
         Log.d("MAIN","Welcome to the first Activity")
+
+
+        Glide.with(this).load("https://concepto.de/wp-content/uploads/2021/11/tipos-de-suelos-e1637359333414.jpg").into(imagen)
 
         val signInButton : Button = findViewById(R.id.SignIn)
         signInButton.setOnClickListener{
