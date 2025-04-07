@@ -7,26 +7,37 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- Botón LogIn -->
+
+    <ImageView
+        android:id="@+id/Imagen"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:layout_marginTop="220dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/LogIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="92dp"
-        android:layout_marginTop="560dp"
         android:text="LogIn"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/Imagen"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/SignIn"
+        app:layout_constraintHorizontal_chainStyle="packed" />
 
+    <!-- Botón SignIn -->
     <Button
         android:id="@+id/SignIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="248dp"
-        android:layout_marginTop="560dp"
         android:text="Sign In"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toBottomOf="@id/Imagen"
+        app:layout_constraintStart_toEndOf="@id/LogIn"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
