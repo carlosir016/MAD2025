@@ -12,7 +12,9 @@
         android:hint="user_name"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="12dp"
+        android:minHeight="48dp" />
 
     <EditText
         android:id="@+id/password"
@@ -21,5 +23,7 @@
         android:hint="password"
         app:layout_constraintTop_toBottomOf="@id/userName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="12dp"
+        android:minHeight="48dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
