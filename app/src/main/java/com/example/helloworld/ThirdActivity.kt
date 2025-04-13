@@ -51,6 +51,11 @@ class ThirdActivity : AppCompatActivity() {
                     true
                 }
 
+                R.id.navigation_post -> {
+                    startActivity(Intent(this, PostsActivity::class.java))
+                    true
+                }
+
                 R.id.navigation_list -> {
                     true
                 }

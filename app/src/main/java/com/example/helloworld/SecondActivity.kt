@@ -68,6 +68,11 @@ class SecondActivity : AppCompatActivity(), LocationListener {
                     true
                 }
 
+                R.id.navigation_post -> {
+                    startActivity(Intent(this, PostsActivity::class.java))
+                    true
+                }
+
                 R.id.navigation_list -> {
                     startActivity(Intent(this, ThirdActivity::class.java))
                     true

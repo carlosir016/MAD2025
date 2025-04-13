@@ -22,6 +22,8 @@
         <activity
             android:name=".OpenStreetMapsActivity"
             android:exported="false" />
+        <activity android:name=".PostsActivity"
+            android:exported="false" />
         <activity
             android:name=".ThirdActivity"
             android:exported="false" />

@@ -121,6 +121,11 @@ class OpenStreetMapsActivity : AppCompatActivity() {
                     true
                 }
 
+                R.id.navigation_post -> {
+                    startActivity(Intent(this, PostsActivity::class.java))
+                    true
+                }
+
                 else -> false
             }
         }

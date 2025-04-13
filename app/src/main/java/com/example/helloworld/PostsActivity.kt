@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 
 import androidx.appcompat.app.AlertDialog
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -43,9 +44,36 @@ class PostsActivity : AppCompatActivity() {
             val intent = Intent(this, CommentsActivity::class.java)
             intent.putExtra("postId", post.id)
             startActivity(intent)
+
+            loadPosts()
+
+        }
+        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        navView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    startActivity(Intent(this, SecondActivity::class.java))
+                    true
+                }
+
+                R.id.navigation_map -> {
+                    startActivity(Intent(this, OpenStreetMapsActivity::class.java))
+                    true
+                }
+
+                R.id.navigation_post -> {
+                    true
+                }
+
+                R.id.navigation_list -> {
+                    startActivity(Intent(this, ThirdActivity::class.java))
+                    true
+                }
+
+                else -> false
+            }
         }
 
-        loadPosts()
     }
 
     private fun loadPosts() {
