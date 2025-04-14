@@ -21,5 +21,5 @@ Renaturalization traker is an android application for farmers who need some info
   - personal coordinates collection
 
 ## Participants
-  - Carlos Andrés Ybañez [e-mail]()
-  - Óscar Herrero Gordaliza [e-mail](oscar.herrero@alumnos.upm.es)
+  - Carlos Andrés Ybañez [(e-mail)]()
+  - Óscar Herrero Gordaliza [(e-mail)](oscar.herrero@alumnos.upm.es)
