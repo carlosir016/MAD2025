@@ -47,4 +47,4 @@ The aim of this section is explain to users how this application works. First of
   - Carlos Andrés Ybañez c.ybanez.ruiz@alumnos.upm.es
   - Óscar Herrero Gordaliza oscar.herrero@alumnos.upm.es
 
-Workload distribution between *(Carlos Ybañez/Óscar Herrero2)*: (50%/50%)
+Workload distribution between *(Carlos Ybañez/Óscar Herrero)*: (50%/50%)
