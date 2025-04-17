@@ -21,6 +21,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.google.firebase.FirebaseApp
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         imagen = findViewById(R.id.Imagen)
