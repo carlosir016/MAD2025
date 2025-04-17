@@ -1,30 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="20dp">
+
+    <TextView
+        android:id="@+id/postContentTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:paddingBottom="12dp"
+        android:textColor="#000000"
+        />
+
 
     <ListView
         android:id="@+id/commentListView"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="1dp"
-        android:layout_marginBottom="12dp"/>
-
-    <EditText
-        android:id="@+id/newCommentEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Escribe un comentario..."
-        android:inputType="text"
-        android:layout_marginBottom="8dp"
-        android:padding="12dp" android:minHeight="48dp" />
+        android:layout_marginBottom="12dp" />
 
     <Button
         android:id="@+id/addCommentButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Añadir Comentario" />
+        android:text="Añadir Comentario"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/backToPostsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Volver a Posts" />
 </LinearLayout>

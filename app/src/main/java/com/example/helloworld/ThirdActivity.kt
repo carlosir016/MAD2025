@@ -39,24 +39,34 @@ class ThirdActivity : AppCompatActivity() {
             createListView(coords)
         }
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
+
         navView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    startActivity(Intent(this, SecondActivity::class.java))
+                    if (this::class != SecondActivity::class) {
+                        startActivity(Intent(this, SecondActivity::class.java))
+                        finish()
+                    }
                     true
                 }
 
                 R.id.navigation_map -> {
-                    startActivity(Intent(this, OpenStreetMapsActivity::class.java))
-                    true
-                }
-
-                R.id.navigation_post -> {
-                    startActivity(Intent(this, PostsActivity::class.java))
+                    if (this::class != OpenStreetMapsActivity::class) {
+                        startActivity(Intent(this, OpenStreetMapsActivity::class.java))
+                        finish()
+                    }
                     true
                 }
 
                 R.id.navigation_list -> {
+                    true
+                }
+
+                R.id.navigation_post -> {
+                    if (this::class != PostsActivity::class) {
+                        startActivity(Intent(this, PostsActivity::class.java))
+                        finish()
+                    }
                     true
                 }
 

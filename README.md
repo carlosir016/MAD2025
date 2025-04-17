@@ -9,7 +9,6 @@ Github:
 Agrozone is an android application for farmers who need some information about their work. Posting notes to ask people about the type of vegteables that they can seed, and some tips to cultivate; The use of an interactive map which can be used to save markers that gives information about the the soil type; A collection page that gives information about the coordinates, the [kind of soil](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRokrlHgV8rQ8k7E6_zPtMXgfhclXihpwRC_w&s) that a place has, and the possible cultives that can be seeded; Finally, the application provide [weather information](https://openweathermap.org/api/one-call-3) about the environment in that site and moment.
 
 ## Activity's screenshots
-
 ![weather](img/weather.png) 
 <p align="center"><em>Figure 1: weather feature</em></p> 
 
@@ -18,7 +17,6 @@ Agrozone is an android application for farmers who need some information about t
 
 ![collection](img/collection.png)
 <p align="center"><em>Figure 3: Coordinates collection</em></p>
-
 
 ![collectionElement](img/collectionElement.png)
 <p align="center"><em>Figure 4: Coordinate information</em></p>
@@ -33,7 +31,6 @@ Agrozone is an android application for farmers who need some information about t
 <p align="center"><em>Figure 7: Post Example</em></p>
 
 ## Video
-
 [Youtube](https://youtu.be/M-q15tdaecY)
 
 ## Features

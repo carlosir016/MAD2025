@@ -43,21 +43,37 @@ class PostsActivity : AppCompatActivity() {
             val post = postList[position]
             val intent = Intent(this, CommentsActivity::class.java)
             intent.putExtra("postId", post.id)
+            intent.putExtra("postContent", post.content)
             startActivity(intent)
-
-            loadPosts()
-
         }
+
+        loadPosts()
+
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
+
         navView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    startActivity(Intent(this, SecondActivity::class.java))
+                    if (this::class != SecondActivity::class) {
+                        startActivity(Intent(this, SecondActivity::class.java))
+                        finish()
+                    }
                     true
                 }
 
                 R.id.navigation_map -> {
-                    startActivity(Intent(this, OpenStreetMapsActivity::class.java))
+                    if (this::class != OpenStreetMapsActivity::class) {
+                        startActivity(Intent(this, OpenStreetMapsActivity::class.java))
+                        finish()
+                    }
+                    true
+                }
+
+                R.id.navigation_list -> {
+                    if (this::class != ThirdActivity::class) {
+                        startActivity(Intent(this, ThirdActivity::class.java))
+                        finish()
+                    }
                     true
                 }
 
@@ -65,15 +81,9 @@ class PostsActivity : AppCompatActivity() {
                     true
                 }
 
-                R.id.navigation_list -> {
-                    startActivity(Intent(this, ThirdActivity::class.java))
-                    true
-                }
-
                 else -> false
             }
         }
-
     }
 
     private fun loadPosts() {

@@ -34,21 +34,20 @@ import kotlinx.coroutines.launch
 class OpenStreetMapsActivity : AppCompatActivity() {
     val coordinatesMarks = mutableListOf<GeoPoint>()
 
-    val goundType = listOf<String>(
+    val groundTypes = listOf(
         "Limoso",
-        "arcilloso",
-        "franco",
-        "arenoso",
-        "suelo",
-        "arcillo-arenoso",
-        "franco-arcilloso",
-        "arcillo-limoso",
-        "franco-limoso",
-        "franco-arenoso",
-        "arenoso-franco",
-        "franco-arcillo-arenoso",
-        "franco-arcillo-limoso",
-        ""
+        "Arcilloso",
+        "Franco",
+        "Arenoso",
+        "Suelo",
+        "Arcillo-Arenoso",
+        "Franco-Arcilloso",
+        "Arcillo-Limoso",
+        "Franco-Limoso",
+        "Franco-Arenoso",
+        "Arenoso-Franco",
+        "Franco-Arcillo-Arenoso",
+        "Franco-Arcillo-Limoso"
     )
 
     data class TipoSuelo(val nombre: String, val cultivos: List<String>)
@@ -70,7 +69,7 @@ class OpenStreetMapsActivity : AppCompatActivity() {
     )
 
 
-    private lateinit var map: MapView
+                private lateinit var map: MapView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,10 +104,14 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         createNav()
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
+
         navView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    startActivity(Intent(this, SecondActivity::class.java))
+                    if (this::class != SecondActivity::class) {
+                        startActivity(Intent(this, SecondActivity::class.java))
+                        finish()
+                    }
                     true
                 }
 
@@ -117,12 +120,18 @@ class OpenStreetMapsActivity : AppCompatActivity() {
                 }
 
                 R.id.navigation_list -> {
-                    startActivity(Intent(this, ThirdActivity::class.java))
+                    if (this::class != ThirdActivity::class) {
+                        startActivity(Intent(this, ThirdActivity::class.java))
+                        finish()
+                    }
                     true
                 }
 
                 R.id.navigation_post -> {
-                    startActivity(Intent(this, PostsActivity::class.java))
+                    if (this::class != PostsActivity::class) {
+                        startActivity(Intent(this, PostsActivity::class.java))
+                        finish()
+                    }
                     true
                 }
 
@@ -131,7 +140,8 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAddMarkerDialog() {
+
+        private fun showAddMarkerDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Añadir nuevo marcador")
 
@@ -142,7 +152,7 @@ class OpenStreetMapsActivity : AppCompatActivity() {
         val lonInput = layout.findViewById<EditText>(R.id.markerLonInput)
         val groundInput = layout.findViewById<Spinner>(R.id.ground)
 
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, goundType)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, groundTypes)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         groundInput.adapter = adapter
 

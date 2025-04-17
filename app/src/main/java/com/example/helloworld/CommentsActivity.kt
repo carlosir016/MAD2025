@@ -1,22 +1,17 @@
 package com.example.helloworld
 
-
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ListView
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.database.*
 
 class CommentsActivity : AppCompatActivity() {
-   private lateinit var commentsRef: DatabaseReference
+
+    private lateinit var commentsRef: DatabaseReference
     private lateinit var commentList: MutableList<Comment>
     private lateinit var adapter: ArrayAdapter<String>
     private lateinit var listView: ListView
@@ -27,6 +22,10 @@ class CommentsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_comments)
 
         postId = intent.getStringExtra("postId") ?: return
+        val postContent = intent.getStringExtra("postContent") ?: "Sin contenido"
+
+        val postContentTextView = findViewById<TextView>(R.id.postContentTextView)
+        postContentTextView.text = postContent
         commentsRef = FirebaseDatabase.getInstance().getReference("comments").child(postId)
 
         listView = findViewById(R.id.commentListView)
@@ -36,6 +35,12 @@ class CommentsActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.addCommentButton).setOnClickListener {
             showNewCommentDialog()
+        }
+
+        findViewById<Button>(R.id.backToPostsButton).setOnClickListener {
+            val intent = Intent(this, PostsActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
         loadComments()
@@ -50,11 +55,12 @@ class CommentsActivity : AppCompatActivity() {
                     val comment = commentSnap.getValue(Comment::class.java)
                     comment?.let {
                         commentList.add(it)
-                        contents.add(it.content)
+                        contents.add("${it.author}: ${it.content}")
                     }
                 }
                 adapter.clear()
                 adapter.addAll(contents)
+                adapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -64,15 +70,21 @@ class CommentsActivity : AppCompatActivity() {
     }
 
     private fun showNewCommentDialog() {
-        val input = EditText(this)
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_new_comment, null)
+        val inputField = dialogView.findViewById<EditText>(R.id.editCommentText)
+
         AlertDialog.Builder(this)
             .setTitle("Nuevo comentario")
-            .setView(input)
+            .setView(dialogView)
             .setPositiveButton("Comentar") { _, _ ->
-                val content = input.text.toString()
-                val id = commentsRef.push().key ?: return@setPositiveButton
-                val comment = Comment(id, postId, content, "Anónimo")
-                commentsRef.child(id).setValue(comment)
+                val content = inputField.text.toString().trim()
+                if (content.isNotEmpty()) {
+                    val id = commentsRef.push().key ?: return@setPositiveButton
+                    val comment = Comment(id, postId, content, "Anónimo")
+                    commentsRef.child(id).setValue(comment)
+                } else {
+                    Toast.makeText(this, "El comentario está vacío", Toast.LENGTH_SHORT).show()
+                }
             }
             .setNegativeButton("Cancelar", null)
             .show()

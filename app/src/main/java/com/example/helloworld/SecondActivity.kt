@@ -57,6 +57,7 @@ class SecondActivity : AppCompatActivity(), LocationListener {
         }
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
+
         navView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
@@ -64,17 +65,26 @@ class SecondActivity : AppCompatActivity(), LocationListener {
                 }
 
                 R.id.navigation_map -> {
-                    startActivity(Intent(this, OpenStreetMapsActivity::class.java))
-                    true
-                }
-
-                R.id.navigation_post -> {
-                    startActivity(Intent(this, PostsActivity::class.java))
+                    if (this::class != OpenStreetMapsActivity::class) {
+                        startActivity(Intent(this, OpenStreetMapsActivity::class.java))
+                        finish()
+                    }
                     true
                 }
 
                 R.id.navigation_list -> {
-                    startActivity(Intent(this, ThirdActivity::class.java))
+                    if (this::class != ThirdActivity::class) {
+                        startActivity(Intent(this, ThirdActivity::class.java))
+                        finish()
+                    }
+                    true
+                }
+
+                R.id.navigation_post -> {
+                    if (this::class != PostsActivity::class) {
+                        startActivity(Intent(this, PostsActivity::class.java))
+                        finish()
+                    }
                     true
                 }
 
